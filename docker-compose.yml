@@ -1,0 +1,42 @@
+services:
+  app:
+    container_name: pos-otomasyon-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pos-otomasyon
+    ports:
+      - "9096:80"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+    networks:
+      - pos-otomasyon-network
+    environment:
+      - LC_ALL=tr_TR.UTF-8
+      - LANG=tr_TR.UTF-8
+
+  db:
+    image: mysql:8.0
+    container_name: pos-otomasyon-db
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: pos-otomasyon-db
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: root
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    ports:
+      - "3311:3306"
+    networks:
+      - pos-otomasyon-network
+
+networks:
+  pos-otomasyon-network:
+
+volumes:
+  mysql-data:
